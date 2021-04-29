@@ -23,7 +23,7 @@ CreateDebate displays subarray of the main post array using <kbd>[Offset : Offse
 * BeautifulSoup (bs4)
 
 ## Start scrapping
-To scrape all the debates under default constraints for <kbd>Topic: Politics</kbd>, run the following command
+To scrape all the debates under default constraints for <kbd>Politics</kbd>, run the following command
 ```bash
 $ python scrape.py --data_dir dataset --tag Politics --page_count 104
 ```
