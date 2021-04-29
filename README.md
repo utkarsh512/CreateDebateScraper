@@ -6,7 +6,7 @@ The URL structure of CreateDebate is pretty simple to decode. Consider the follo
 https://www.createdebate.com/browse/debates/all/mostheated/alltypes/alltime/Politics/0/24/open
 ```
 ![](CreateDebate.JPG)
-Let's split the URL into floowing components:
+Let's split the URL into following components:
 * __Base URL__: `https://www.createdebate.com/browse/debates/all/`
 * __Sort By__: `mostheated` (available options are `mostheated`, `mostrecent`, `mostarguments`, `mostvotes`, `newactivity` and `randomly`)
 * __Type of Debate__: `alltypes` (other available options can be checked from the `Type` dropdown of the webpage)
