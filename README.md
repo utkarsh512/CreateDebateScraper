@@ -1,2 +1,2 @@
-# cds
-CreateDebate Scrapper using BeautifulSoup
+# CreateDebate Scrapper API
+Documentation coming soon.
