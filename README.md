@@ -27,4 +27,4 @@ To scrape all the debates under default constraints for <kbd>Topic: Politics</kb
 ```bash
 $ python scrape.py --data_dir dataset --tag Politics --page_count 104
 ```
-Here, 104 is the total number of pages showed on the webpage when <kbd>PerPage</kbd> is set to 96. The parameters can be changed as per one's need.
+Here, 104 is the total number of pages showed on the webpage when <kbd>PerPage</kbd> is set to 96. The parameters can be changed as per one's need (<kbd>line: 27</kbd> of `src/scrape.py`).
