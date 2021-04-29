@@ -14,7 +14,7 @@ Let's split the URL into following components:
 * __Topic__: <kbd>Politics</kbd> (other available options can be checked from the webpage)
 * __Offset__: Starting index of the post array (see Notes section for more detail)
 * __PerPage__: Number of posts displayed on a single page (available options are 12, 24, 48 and 96; see Notes section for more detail)
-* __State of Post__: <kbd>open</kbd> (other options are <kbd>closed` and <kbd>both</kbd>)
+* __State of Post__: <kbd>open</kbd> (other options are <kbd>closed</kbd> and <kbd>both</kbd>)
 
 ### Notes
 CreateDebate displays subarray of the main post array using <kbd>[Offset : Offset + PerPage]</kbd>. This API uses <kbd>PerPage</kbd> of 96, and <kbd>Offset</kbd> is increased in steps of 96 to scrape entire data set with given constraints.
