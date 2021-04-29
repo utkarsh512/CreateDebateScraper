@@ -1,4 +1,4 @@
-# scrap.py -- for scrapping the CreateDebate dataset
+# scrape.py -- for scrapping the CreateDebate dataset
 #
 # author: @utkarsh512
 #
