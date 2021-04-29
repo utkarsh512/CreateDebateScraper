@@ -17,7 +17,7 @@ Let's split the URL into floowing components:
 * __State of Post__: `open` (other options are `closed` and `both`)
 
 ### Notes
-CreateDebate displays subaaray of the main post array using `[offset : offset + perpage]`. This API uses <kbd>PerPage</kbd> of 96, and <kbd>Offset</kbd> is increased in steps of 96 to scrape entire data set with given constraints.
+CreateDebate displays subarray of the main post array using `[offset : offset + perpage]`. This API uses <kbd>PerPage</kbd> of 96, and <kbd>Offset</kbd> is increased in steps of 96 to scrape entire data set with given constraints.
 
 ## Requirements
 * BeautifulSoup (bs4)
