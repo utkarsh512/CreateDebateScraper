@@ -1,4 +1,4 @@
-# scrape.py -- for scrapping the CreateDebate dataset
+# scrap.py -- for scrapping the CreateDebate dataset
 #
 # author: @utkarsh512
 #
@@ -93,7 +93,16 @@ def main():
                     # Decoding time and polarity
                     cur_time_polarity = str(cur_time_polarity).split()
                     tic = cur_time_polarity[3][10:-1]
-                    pol = cur_time_polarity[-2]
+
+                    pol = []
+                    it = -2
+                    
+                    while cur_time_polarity[it] != 'Side:':
+                        pol.append(cur_time_polarity[it])
+                        it -= 1
+
+                    pol = pol[::-1]
+                    pol = ' '.join(pol)
 
                     comment.set_time(tic)
                     comment.set_polarity(pol)
