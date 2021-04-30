@@ -23,6 +23,8 @@ CreateDebate displays subarray of the main post array using <kbd>[Offset : Offse
 * BeautifulSoup (bs4)
 
 ## Start scrapping
+For scraping the CreateDebate website and creating a JSON data set, refer to this [notebook](https://colab.research.google.com/drive/12bJ2JBfJUW9_suDUl02WFSGQJMqzCUEB?usp=sharing).
+
 To scrape all the debates under default constraints for <kbd>Politics</kbd>, run the following command
 ```bash
 $ python scrape.py --data_dir dataset --tag Politics --page_count 104
