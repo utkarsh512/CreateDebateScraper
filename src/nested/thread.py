@@ -4,7 +4,7 @@
 #
 
 import textwrap as tw
-import json
+import copy
 
 class Comment:
     '''Comment class for storing comments and additional information'''
@@ -36,6 +36,11 @@ class Comment:
             s += '\t' * indent + x.strip() + '\n'
         s += '\t' * indent + '[Posted by ' + self.author + ' at ' + self.time + ' - Side: ' + self.polarity + ']\n'
         return s
+
+    def jsonify(self):
+        table = copy.deepcopy(self.__dict__)
+        table['replies'] = list()
+        return table
 
 class Thread:
     '''Thread class for storing all the comments belonging to a given thread'''
@@ -90,3 +95,27 @@ class Thread:
 
         s[0] += '_' * 100 + '\n'
         return s[0]
+
+    def jsonify(self):
+        table = dict()
+        table['title'] = self.title
+        table['author'] = self.author
+        table['tag'] = self.tag
+        table['url'] = self.url
+        table['comments'] = list()
+
+        def dfs(Map, fill=None, cid='root'):
+            if cid == 'root':
+                for key in Map[cid].keys():
+                    dfs(Map[cid], table['comments'], key)
+                return
+            foo = self.comments[cid].jsonify()
+            for key in Map[cid].keys():
+                dfs(Map[cid], foo['replies'], key)
+            fill.append(foo)
+            
+        if 'root' in self.metaL.keys():
+            dfs(self.metaL)
+        if 'root' in self.metaR.keys():
+            dfs(self.metaR)
+        return table
