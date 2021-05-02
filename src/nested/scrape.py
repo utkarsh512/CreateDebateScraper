@@ -123,13 +123,13 @@ def main():
     parser.add_argument("--data_dir", default=None, type=str, required=True, help="directory to store .log file of Thread objects")
     parser.add_argument("--tag", default=None, type=str, required=True, help="domain of the comments")
     parser.add_argument("--page_count", default=None, type=int, required=True, help="number of pages (when viewed in 96 offset mode)")
-    parser.add_argument("--show_comments", default=False, type=bool, required=False, help="whether to print comments during processing")
     args = parser.parse_args()
 
     writer_addr = os.path.join(args.data_dir, 'threads.log')
     writer = open(writer_addr, 'wb')
 
-    json_list = []
+    json_addr = os.path.join(args.data_dir, 'threads.json')
+    jsonw = open(json_addr, 'w', encoding='utf-8')
     
     for page_no in range(args.page_count):
         print(f'Scrapping page {page_no + 1} of 104...')
@@ -213,17 +213,12 @@ def main():
                     dfs(thrd, sp, RTree, 'root')
                 
             pickle.dump(thrd, writer)
-            json_list.append(thrd.jsonify())
-
-            #for x in thrd.comments.keys():
-                # print(x, thrd.comments[x])
-
-            # with open('debug.txt', 'a+', encoding='utf-8') as f:
-                # f.write(thrd.__str__())
-        
+            jsoned_thrd = thrd.jsonify()
+            
+            jsonw.write(json.dumps(jsoned_thrd) + '\n')
+     
+    jsonw.close()
     writer.close()
-    # with open('debug.json', 'w') as f:
-        # f.write(json.dumps(json_list, indent=4))
 
 if __name__ == '__main__':
     main()
