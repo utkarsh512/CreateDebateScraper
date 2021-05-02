@@ -128,6 +128,8 @@ def main():
 
     writer_addr = os.path.join(args.data_dir, 'threads.log')
     writer = open(writer_addr, 'wb')
+
+    json_list = []
     
     for page_no in range(args.page_count):
         print(f'Scrapping page {page_no + 1} of 104...')
@@ -211,6 +213,7 @@ def main():
                     dfs(thrd, sp, RTree, 'root')
                 
             pickle.dump(thrd, writer)
+            json_list.append(thrd.jsonify())
 
             #for x in thrd.comments.keys():
                 # print(x, thrd.comments[x])
@@ -219,6 +222,8 @@ def main():
                 # f.write(thrd.__str__())
         
     writer.close()
+    # with open('debug.json', 'w') as f:
+        # f.write(json.dumps(json_list, indent=4))
 
 if __name__ == '__main__':
     main()
