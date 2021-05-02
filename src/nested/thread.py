@@ -39,7 +39,7 @@ class Comment:
 
     def jsonify(self):
         table = copy.deepcopy(self.__dict__)
-        table['replies'] = list()
+        table['comments'] = list()
         return table
 
 class Thread:
@@ -111,7 +111,7 @@ class Thread:
                 return
             foo = self.comments[cid].jsonify()
             for key in Map[cid].keys():
-                dfs(Map[cid], foo['replies'], key)
+                dfs(Map[cid], foo['comments'], key)
             fill.append(foo)
             
         if 'root' in self.metaL.keys():
