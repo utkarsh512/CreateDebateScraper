@@ -191,8 +191,8 @@ def main():
                 RTree = getCommentTree(sp, 'debateSideBox sideR')
                 thrd.set_meta(LTree, RTree)
 
-                print(json.dumps(LTree, indent=4))
-                print(json.dumps(RTree, indent=4))
+                # print(json.dumps(LTree, indent=4))
+                # print(json.dumps(RTree, indent=4))
 
                 if 'root' in LTree.keys():
                     dfs(thrd, sp, LTree, 'root')
@@ -204,8 +204,8 @@ def main():
                 RTree = dict()
                 thrd.set_meta(LTree, RTree)
 
-                print(json.dumps(LTree, indent=4))
-                print(json.dumps(RTree, indent=4))
+                # print(json.dumps(LTree, indent=4))
+                # print(json.dumps(RTree, indent=4))
 
                 if 'root' in LTree.keys():
                     dfs(thrd, sp, LTree, 'root')
