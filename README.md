@@ -1,5 +1,5 @@
 # CreateDebate Scraper API
-[CreateDebate](https://www.createdebate.com/) is an online forum that allows students and experts alike to debate a variety of topics and practice persuasive writing. It has a large corpus of data related to a vast number of topics. This API allows to scrape all the debates related to a particular topic. There are two versions of this API: Linear and Nested. Linear API extracts the post comments but lacks the inherent nesting structure of comments on the webpage. Nested API removes this limitation by scraping the comments in a nested fashion.
+[CreateDebate](https://www.createdebate.com/) is an online forum that allows students and experts alike to debate a variety of topics and practice persuasive writing. It has a large corpus of data related to a vast number of topics. This API allows to scrape all the debates related to a particular topic perserving the nested structure of comments on a post.
 ## Tutorial
 The URL structure of CreateDebate is pretty simple to decode. Consider the following URL
 ```
@@ -20,9 +20,9 @@ Let's split the URL into following components:
 CreateDebate displays subarray of the main post array using <kbd>[Offset : Offset + PerPage]</kbd> slicing. This API uses <kbd>PerPage</kbd> of 96, and <kbd>Offset</kbd> is increased in steps of 96 to scrape entire data set with given constraints.
 
 ## Requirements
-* BeautifulSoup (bs4)
-* networkx (for Nested API only)
-* glom (for Nested API only)
+* bs4
+* networkx
+* glom
 
 ## Start scraping
 For scraping the CreateDebate website and creating a JSON data set, refer to this [notebook](https://colab.research.google.com/drive/12bJ2JBfJUW9_suDUl02WFSGQJMqzCUEB?usp=sharing).
