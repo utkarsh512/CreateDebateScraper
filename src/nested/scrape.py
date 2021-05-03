@@ -89,7 +89,7 @@ def getCommentbyID(sp, cid):
 
     # Decoding author of comment
     div = sp.find('div', id=cid)
-    div = div.find('a', class_='points')
+    div = div.find_all('a')[0]
     athr = str(div['href'].split('/')[-1])
     c.set_author(athr)
 
