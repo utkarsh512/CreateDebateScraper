@@ -126,6 +126,9 @@ def main():
     json_addr = os.path.join(args.data_dir, 'threads.json')
     jsonw = open(json_addr, 'w', encoding='utf-8')
 
+    debugger_addr = os.path.join(args.data_dir, 'debug.txt')
+    debugger = open(debugger_addr, 'w', encoding='utf-8')
+
     json_list = []
     
     for page_no in range(args.page_count):
@@ -161,59 +164,66 @@ def main():
         print('Building Thread objects...')
 
         for i in tqdm(range(len(final)), unit=' threads', desc='Processing threads'):
-            post = requests.get(final[i])
-            sp = BeautifulSoup(post.text, "lxml")
-            thread_title = sp.find_all("h1", class_="debateTitle")
-            comment_authors = sp.find_all("a", class_="points")
-            thrd = Thread()
-
-            # Decoding thread title
             try:
-                thread_title = str(thread_title[0])[25: -6]
-            except IndexError:
-                # Cannot extract thread title, possibly Thread is a private post
-                continue
-            thrd.set_title(thread_title)
-            thrd.set_tag(args.tag)
-            thrd_author = comment_authors[0]
-            thrd_author = thrd_author['href']
-            thrd_author = thrd_author[35:]
-            thrd.set_author(thrd_author)
-            thrd.set_url(final[i])
+                post = requests.get(final[i])
+                sp = BeautifulSoup(post.text, "lxml")
+                thread_title = sp.find_all("h1", class_="debateTitle")
+                comment_authors = sp.find_all("a", class_="points")
+                thrd = Thread()
 
-            comment_authors = comment_authors[1:]
+                # Decoding thread title
+                try:
+                    thread_title = str(thread_title[0])[25: -6]
+                except IndexError:
+                    # Cannot extract thread title, possibly Thread is a private post
+                    continue
+                thrd.set_title(thread_title)
+                thrd.set_tag(args.tag)
+                thrd_author = comment_authors[0]
+                thrd_author = thrd_author['href']
+                thrd_author = thrd_author[35:]
+                thrd.set_author(thrd_author)
+                thrd.set_url(final[i])
 
-            try:
-                LTree = getCommentTree(sp, 'debateSideBox sideL')
-                RTree = getCommentTree(sp, 'debateSideBox sideR')
-                thrd.set_meta(LTree, RTree)
+                comment_authors = comment_authors[1:]
 
-                # print(json.dumps(LTree, indent=4))
-                # print(json.dumps(RTree, indent=4))
+                try:
+                    LTree = getCommentTree(sp, 'debateSideBox sideL')
+                    RTree = getCommentTree(sp, 'debateSideBox sideR')
+                    thrd.set_meta(LTree, RTree)
 
-                if 'root' in LTree.keys():
-                    dfs(thrd, sp, LTree, 'root')
-                if 'root' in RTree.keys():
-                    dfs(thrd, sp, RTree, 'root')
-            except:
-                # Given page doesn't has a Left / Right side
-                LTree = getCommentTree(sp, 'bothsidesbox')
-                RTree = dict()
-                thrd.set_meta(LTree, RTree)
+                    # print(json.dumps(LTree, indent=4))
+                    # print(json.dumps(RTree, indent=4))
 
-                # print(json.dumps(LTree, indent=4))
-                # print(json.dumps(RTree, indent=4))
+                    if 'root' in LTree.keys():
+                        dfs(thrd, sp, LTree, 'root')
+                    if 'root' in RTree.keys():
+                        dfs(thrd, sp, RTree, 'root')
+                except:
+                    # Given page doesn't has a Left / Right side
+                    LTree = getCommentTree(sp, 'bothsidesbox')
+                    RTree = dict()
+                    thrd.set_meta(LTree, RTree)
 
-                if 'root' in LTree.keys():
-                    dfs(thrd, sp, LTree, 'root')
-                if 'root' in RTree.keys():
-                    dfs(thrd, sp, RTree, 'root')
+                    # print(json.dumps(LTree, indent=4))
+                    # print(json.dumps(RTree, indent=4))
+
+                    if 'root' in LTree.keys():
+                        dfs(thrd, sp, LTree, 'root')
+                    if 'root' in RTree.keys():
+                        dfs(thrd, sp, RTree, 'root')
+                    
+                pickle.dump(thrd, writer)
+                jsoned_thrd = thrd.jsonify()
+                json_list.append(jsoned_thrd)
+                jsonw.write(json.dumps(jsoned_thrd) + '\n')
+
+            except Exception as e:
+                error_log = f'{e}\n'
+                error_log += f'[Occured on page {page_no + 1} - post {i + 1}]\n\n'
+                debugger.write(error_log)
                 
-            pickle.dump(thrd, writer)
-            jsoned_thrd = thrd.jsonify()
-            json_list.append(jsoned_thrd)
-            jsonw.write(json.dumps(jsoned_thrd) + '\n')
-     
+    debugger.close()
     jsonw.close()
     writer.close()
 
