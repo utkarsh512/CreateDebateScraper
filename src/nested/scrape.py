@@ -219,7 +219,7 @@ def main():
 
     addr = os.path.join(args.data_dir, 'threads2.json')
 
-    with open('addr', 'w', encoding='utf-8') as f:
+    with open(addr, 'w', encoding='utf-8') as f:
         f.write(json.dumps(json_list, indent=2))
 
 if __name__ == '__main__':
