@@ -129,7 +129,7 @@ def main():
     json_list = []
     
     for page_no in range(args.page_count):
-        print(f'Scrapping page {page_no + 1} of 104...')
+        print(f'Scraping page {page_no + 1} of 104...')
         url = 'https://www.createdebate.com/browse/debates/all/mostheated/alltypes/alltime/{0}/{1}/96/open'.format(args.tag, page_no * 96)
         response = requests.get(url)
 
