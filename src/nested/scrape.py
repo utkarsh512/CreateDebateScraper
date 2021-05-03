@@ -17,9 +17,6 @@ import json
 
 def getCommentTree(html, side):
     # Utility to get nested comment structure by comment ids
-    #
-    # :param html: bs4 object
-    # :param side: L/ R (left / right)
     
     divelem = html.find('div', class_=side)
     allDivElems = divelem.find_all('div')
@@ -128,6 +125,8 @@ def main():
 
     json_addr = os.path.join(args.data_dir, 'threads.json')
     jsonw = open(json_addr, 'w', encoding='utf-8')
+
+    json_list = []
     
     for page_no in range(args.page_count):
         print(f'Scrapping page {page_no + 1} of 104...')
@@ -212,11 +211,16 @@ def main():
                 
             pickle.dump(thrd, writer)
             jsoned_thrd = thrd.jsonify()
-            
+            json_list.append(jsoned_thrd)
             jsonw.write(json.dumps(jsoned_thrd) + '\n')
      
     jsonw.close()
     writer.close()
+
+    addr = os.path.join(args.data_dir, 'threads2.json')
+
+    with open('addr', 'w', encoding='utf-8') as f:
+        f.write(json.dumps(json_list, indent=2))
 
 if __name__ == '__main__':
     main()
