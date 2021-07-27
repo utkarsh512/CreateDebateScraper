@@ -15,17 +15,17 @@ import glom
 import re
 import json
 
-def getCommentTree(html, side):
+def get_comment_tree(html, side):
     # Utility to get nested comment structure by comment ids
     
-    divelem = html.find('div', class_=side)
-    allDivElems = divelem.find_all('div')
+    element = html.find('div', class_=side)
+    div_element = element.find_all('div')
 
     flag = ''
     tree = nx.DiGraph()
 
-    for i in range(len(allDivElems)):
-        div = allDivElems[i]
+    for i in range(len(div_element)):
+        div = div_element[i]
         cls = div.get('class')
         if cls != ['argBox', 'argument'] and cls != ['arg-threaded']:
             continue
@@ -62,7 +62,7 @@ def getCommentTree(html, side):
 
     return struct
 
-def getPolarityandTime(x):
+def get_polarity_time(x):
     try:
         y = str(x).split()
         tic = y[3][10:-1]
@@ -77,7 +77,7 @@ def getPolarityandTime(x):
     except:
         return ('Not Available', 'Not Available')
 
-def getCommentbyID(sp, cid):
+def get_comment(sp, cid):
     # Fetches comment by its id
     
     c = Comment()
@@ -100,7 +100,7 @@ def getCommentbyID(sp, cid):
     c.set_body(comment_body)
 
     # Decoding Time and Polarity
-    tic, pol = getPolarityandTime(lst[3])
+    tic, pol = get_polarity_time(lst[3])
     c.set_time(tic)
     c.set_polarity(pol)
     
@@ -108,7 +108,7 @@ def getCommentbyID(sp, cid):
 
 def dfs(thrd, sp, lookup, cid):
     if cid != 'root':
-        thrd.comments[cid] =  getCommentbyID(sp, cid)
+        thrd.comments[cid] =  get_comment(sp, cid)
     for key in lookup[cid].keys():
         dfs(thrd, sp, lookup[cid], key)
     
@@ -116,8 +116,12 @@ def dfs(thrd, sp, lookup, cid):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--data_dir", default=None, type=str, required=True, help="directory to store .log file of Thread objects")
-    parser.add_argument("--tag", default=None, type=str, required=True, help="domain of the comments")
+    parser.add_argument("--tag", default=None, type=str, required=True, help="tag of the comments")
     parser.add_argument("--page_count", default=None, type=int, required=True, help="number of pages (when viewed in 96 offset mode)")
+    parser.add_argument("--type", default="alltypes", type=str, required=False, help="type of debates")
+    parser.add_argument("--sort_by", default="mostheadted", type=str, required=False, help="mostheated//mostrecent/mostarguments etc.")
+    parser.add_argument("--time", default="alltime", type=str, required=False, help="period of the debate")
+    parser.add_argument("--state", default="open", type=str, required=False, help="open/close")
     args = parser.parse_args()
 
     writer_addr = os.path.join(args.data_dir, 'threads.log')
@@ -132,8 +136,8 @@ def main():
     json_list = []
     
     for page_no in range(args.page_count):
-        print(f'Scraping page {page_no + 1} of 104...')
-        url = 'https://www.createdebate.com/browse/debates/all/mostheated/alltypes/alltime/{0}/{1}/96/open'.format(args.tag, page_no * 96)
+        print(f'Scraping page {page_no + 1} of {args.page_count}...')
+        url = 'https://www.createdebate.com/browse/debates/all/{}/{}/{}/{}/{}/96/{}'.format(args.sort_by, args.type, args.time, args.tag, page_no * 96, args.state)
         response = requests.get(url)
 
         soup = BeautifulSoup(response.text, "html.parser")
@@ -188,30 +192,30 @@ def main():
                 comment_authors = comment_authors[1:]
 
                 try:
-                    LTree = getCommentTree(sp, 'debateSideBox sideL')
-                    RTree = getCommentTree(sp, 'debateSideBox sideR')
-                    thrd.set_meta(LTree, RTree)
+                    left_tree = get_comment_tree(sp, 'debateSideBox sideL')
+                    right_tree = get_comment_tree(sp, 'debateSideBox sideR')
+                    thrd.set_meta(left_tree, right_tree)
 
-                    # print(json.dumps(LTree, indent=4))
-                    # print(json.dumps(RTree, indent=4))
+                    # print(json.dumps(left_tree, indent=4))
+                    # print(json.dumps(right_tree, indent=4))
 
-                    if 'root' in LTree.keys():
-                        dfs(thrd, sp, LTree, 'root')
-                    if 'root' in RTree.keys():
-                        dfs(thrd, sp, RTree, 'root')
+                    if 'root' in left_tree.keys():
+                        dfs(thrd, sp, left_tree, 'root')
+                    if 'root' in right_tree.keys():
+                        dfs(thrd, sp, right_tree, 'root')
                 except:
                     # Given page doesn't has a Left / Right side
-                    LTree = getCommentTree(sp, 'bothsidesbox')
-                    RTree = dict()
-                    thrd.set_meta(LTree, RTree)
+                    left_tree = get_comment_tree(sp, 'bothsidesbox')
+                    right_tree = dict()
+                    thrd.set_meta(left_tree, right_tree)
 
-                    # print(json.dumps(LTree, indent=4))
-                    # print(json.dumps(RTree, indent=4))
+                    # print(json.dumps(left_tree, indent=4))
+                    # print(json.dumps(right_tree, indent=4))
 
-                    if 'root' in LTree.keys():
-                        dfs(thrd, sp, LTree, 'root')
-                    if 'root' in RTree.keys():
-                        dfs(thrd, sp, RTree, 'root')
+                    if 'root' in left_tree.keys():
+                        dfs(thrd, sp, left_tree, 'root')
+                    if 'root' in right_tree.keys():
+                        dfs(thrd, sp, right_tree, 'root')
                     
                 pickle.dump(thrd, writer)
                 jsoned_thrd = thrd.jsonify()
