@@ -23,6 +23,7 @@ CreateDebate displays subarray of the main post array using <kbd>[Offset : Offse
 * bs4
 * networkx
 * glom
+* lxml
 
 ## Start scraping
 For scraping the CreateDebate website and creating a JSON data set, refer to this [notebook](https://colab.research.google.com/drive/12bJ2JBfJUW9_suDUl02WFSGQJMqzCUEB?usp=sharing).
