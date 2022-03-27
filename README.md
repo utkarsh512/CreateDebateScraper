@@ -1,4 +1,4 @@
-# CreateDebate Scraper API
+# CreateDebateScraper
 [CreateDebate](https://www.createdebate.com/) is an online forum that allows students and experts alike to debate a variety of topics and practice persuasive writing. It has a large corpus of data related to a vast number of topics. This API allows to scrape all the debates related to a particular topic perserving the nested structure of comments on a post.
 ## Tutorial
 The URL structure of CreateDebate is pretty simple to decode. Consider the following URL
